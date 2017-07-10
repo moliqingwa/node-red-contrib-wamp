@@ -1,0 +1,177 @@
+<script type="text/x-red" data-template-name="wamp in">
+    <div class="form-row">
+        <label for="node-input-role"><i class="fa fa-dot-circle-o"></i> <span data-i18n="wamp.label.role"></span></label>
+        <select type="text" id="node-input-role" style="width:70%;">
+            <option value="subscriber" data-i18n="wamp.label.subscriber.role.subscriber"></option>
+            <option value="calleeReceiver" data-i18n="wamp.label.subscriber.role.calleeReceiver"></option>
+        </select>
+    </div>
+    <div class="form-row node-input-router">
+        <label for="node-input-router" style="width: 110px;"><i class="fa fa-bookmark"></i> <span data-i18n="wamp.label.router"></span></label>
+        <input type="text" id="node-input-router">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic" style="width: 110px;"><i class="fa fa-envelope"></i> <span data-i18n="wamp.label.destination"></span></label>
+        <input type="text" id="node-input-topic" data-i18n="[placeholder]wamp.placeholder.subscriber.destination">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name" style="width: 110px;"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="wamp in">
+   <p>Connects to a WAMP router and subscribes a topic or registers a procedure to listen on.</p>
+   <p>Outputs an object called <code>msg</code> containing <code>msg.topic</code> (or <code>msg.procedure</code>) and
+   <code>msg.payload</code>. msg.payload contains args, which is an array or null and kwargs, which is an object or null.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('wamp in',{
+        category: 'input',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            role: {value: "subscriber", required: true},
+            router: {type: "wamp-client", required: true},
+            topic: {value:"", required: true},
+            name: {value:""}
+        },
+        color:"#79d8bf",
+        inputs:0,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        // set the icon (held in icons dir below where you save the node)
+        icon: "bridge.png",     // saved in  icons/myicon.png
+        label: function() {     // sets the default label contents
+            var wampNode = RED.nodes.node(this.router);
+            return this.name || this.topic || (wampNode ? wampNode.label() : this._("wamp.label.wamp"));
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        }
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="wamp out">
+    <div class="form-row">
+        <label for="node-input-role"><i class="fa fa-dot-circle-o"></i> <span data-i18n="wamp.label.role"></span></label>
+        <select type="text" id="node-input-role" style="width:70%;">
+            <option value="publisher" data-i18n="wamp.label.publisher.role.publisher"></option>
+            <option value="calleeResponse" data-i18n="wamp.label.publisher.role.calleeResponse"></option>
+        </select>
+    </div>
+    <div class="form-row node-input-router">
+        <label for="node-input-router" style="width: 110px;"><i class="fa fa-bookmark"></i> <span data-i18n="wamp.label.router"></span></label>
+        <input type="text" id="node-input-router">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic" style="width: 110px;"><i class="fa fa-envelope"></i> <span data-i18n="wamp.label.destination"></label>
+        <input type="text" id="node-input-topic" data-i18n="[placeholder]wamp.placeholder.publisher.destination">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name" style="width: 110px;"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="wamp out">
+   <p>Connects to WAMP router and publishes messages or returns callee's result.</p>
+   <p>Only the <code>msg.payload</code> is sent.</p>
+   <p>When in Callee Response role, the topic is not used.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('wamp out',{
+        category: 'output',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            role: {value: "publisher", required: true},
+            router: {type: "wamp-client", required: true},
+            topic: {value:"", required: false},
+            name: {value:""}
+        },
+        color:"#79d8bf",
+        inputs:1,
+        outputs:0,
+        icon: "white-globe.png",
+        align: "right",
+        label: function() {     // sets the default label contents
+            var wampNode = RED.nodes.node(this.router);
+            return this.name || this.topic || (wampNode ? wampNode.label() : this._("wamp.label.wamp"));
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        }
+    });
+</script>
+
+
+
+<script type="text/x-red" data-template-name="wamp call">
+    <div class="form-row node-input-router">
+        <label for="node-input-router" style="width: 110px;"><i class="fa fa-bookmark"></i> <span data-i18n="wamp.label.router"></span></label>
+        <input type="text" id="node-input-router">
+    </div>
+    <div class="form-row">
+        <label for="node-input-procedure" style="width: 110px;"><i class="fa fa-envelope"></i> <span data-i18n="wamp.label.procedure"></span></label>
+        <input type="text" id="node-input-procedure" data-i18n="[placeholder]wamp.placeholder.procedure">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name" style="width: 110px;"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="wamp call">
+   <p>Provides a connection to other WAMP client.</p>
+   <p>Only the <code>msg.payload</code> is sent.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('wamp call',{
+        category: 'function',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            router: {type: "wamp-client", required: true},
+            procedure: {value:"", required: true},
+            name: {value:""}
+        },
+        color:"#79d8bf",
+        inputs:1,
+        outputs:1,
+        icon: "arrow-in.png",
+        align: "right",
+        label: function() {
+            var wampNode = RED.nodes.node(this.router);
+            return this.name || this.procedure || (wampNode ? wampNode.label() : this._("wamp.label.wamp"));
+        },
+        labelStyle: function() { // sets the class to apply to the label
+            return this.name?"node_label_italic":"";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="wamp-client">
+    <div class="form-row node-input-router">
+        <label for="node-config-input-address"><i class="fa fa-bookmark"></i> <span data-i18n="wamp.label.router"></span></label>
+        <input type="text" id="node-config-input-address" data-i18n="[placeholder]wamp.placeholder.router" style="width: 45%;" >
+        <br>
+        <label for="node-config-input-realm" style="margin-left: 15px; width: 85px; "> <span data-i18n="wamp.label.realm"></span></label>
+        <input type="text" id="node-config-input-realm" data-i18n="[placeholder]wamp.placeholder.realm" style="width: 45%;">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></span></label>
+        <input type="text" id="node-config-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('wamp-client',{
+        category: 'config',      // the palette category
+        defaults: {             // defines the editable properties of the node
+            address: {required: true},
+            realm: {required: true},
+            name: {}
+        },
+        label: function() {     // sets the default label contents
+            return (this.name?this.name:this.realm+"@"+this.address);
+        }
+    });
+</script>

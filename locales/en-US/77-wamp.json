@@ -1,0 +1,35 @@
+{
+  "wamp": {
+    "label": {
+      "wamp": "wamp",
+      "role": "Role",
+      "subscriber": {
+        "role": {
+          "subscriber": "Subscriber",
+          "calleeReceiver": "Callee Receiver"
+        }
+      },
+      "publisher": {
+        "role": {
+          "publisher": "Publisher",
+          "calleeResponse": "Callee Response"
+        }
+      },
+      "router": "Router",
+      "destination": "Destination",
+      "procedure": "Procedure",
+      "realm": "Realm"
+    },
+    "placeholder": {
+      "subscriber": {
+        "destination": "topic or procedure"
+      },
+      "publisher": {
+        "destination": "topic or procedure"
+      },
+      "procedure": "procedure",
+      "router": "ws://127.0.0.1:9995/",
+      "realm": "realm01"
+    }
+  }
+}

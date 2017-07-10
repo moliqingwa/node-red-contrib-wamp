@@ -1,0 +1,28 @@
+{
+  "name": "node-red-contrib-wamp",
+  "version": "0.0.1",
+  "description": "Node-RED nodes to talk to WAMP",
+  "dependencies": {
+    "autobahn": "17.5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/node-red/node-red-nodes/tree/master/io/serialport"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "node-red",
+    "wamp"
+  ],
+  "node-red": {
+    "version": ">=0.14.0",
+    "nodes": {
+      "wampConnection": "77-wamp.js"
+    }
+  },
+  "author": {
+    "name": "Zhen Wang",
+    "email": "wangzhen@vtstar.net",
+    "url": "http://nodered.org"
+  }
+}
