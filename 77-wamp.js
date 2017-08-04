@@ -155,7 +155,7 @@ module.exports = function (RED) {
                                 node.send({payload: resp});
                             },
                             function (err) {
-                                RED.log.warn("call response failed: " +err);
+                                RED.log.warn("call response failed: " + err.error);
                             }
                         )
                     }
@@ -305,7 +305,7 @@ module.exports = function (RED) {
                                             RED.log.debug("wamp register procedure [" + procedure + "] success.");
                                         },
                                         function (err) {
-                                            RED.log.warn("wamp register procedure ["+procedure+"] failed: " + err);
+                                            RED.log.warn("wamp register procedure ["+procedure+"] failed: " + err.error);
                                         }
                                     )
                                 }
@@ -317,7 +317,7 @@ module.exports = function (RED) {
                                 obj._connecting = false;
                                 obj._connected = false;
                                 if (!obj._closing) {
-                                    RED.log.error("unexpected close", {uri:uri});
+                                    // RED.log.error("unexpected close", {uri:uri});
                                     obj._emitter.emit("closed");
 
                                     if (!obj._tout) {
