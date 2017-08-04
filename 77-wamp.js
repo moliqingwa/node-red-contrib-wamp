@@ -193,6 +193,7 @@ module.exports = function (RED) {
                             _subscribeMap: {},
                             _procedureReqMap: {},
                             _procedureMap: {},
+                            _tout: null,
                             on: function (a, b) {
                                 this._emitter.on(a, b);
                             },
@@ -274,6 +275,9 @@ module.exports = function (RED) {
                             var options = {url: address, realm: realm};
                             obj.wampConnection = new autobahn.Connection(options);
 
+                            obj._tout && clearTimeout(obj._tout);
+                            obj._tout = null;
+
                             obj.wampConnection.onopen = function (session) {
                                 RED.log.info("wamp client [" + options + "]connected.");
                                 obj.wampSession = session;
@@ -315,9 +319,15 @@ module.exports = function (RED) {
                                 if (!obj._closing) {
                                     RED.log.error("unexpected close", {uri:uri});
                                     obj._emitter.emit("closed");
+
+                                    if (!obj._tout) {
+                                        obj._tout = setTimeout(function () {
+                                            setupWampClient();
+                                        }, 5000); // TODO: put this in settings
+                                    }
                                 }
                                 obj._subscribeMap = {};
-                                RED.log.info("wamp client [" + options +"] closed");
+                                RED.log.info("wamp client closed");
                             };
 
                             obj.wampConnection.open();
@@ -332,12 +342,13 @@ module.exports = function (RED) {
             close: function (address, realm, done) {
                 var uri = realm + "@" + address;
                 if (connections[uri]) {
+                    RED.log.info("ready to close wamp client [" + uri +"]");
                     connections[uri]._closing = true;
-                    connections[uri].close()
-                    done();
+                    connections[uri].close();
+                    (typeof(done) == 'function') && done();
                     delete connections[uri];
                 } else {
-                    done();
+                    (typeof(done) == 'function') && done();
                 }
             }
         }
