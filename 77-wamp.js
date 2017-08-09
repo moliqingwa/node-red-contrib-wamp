@@ -193,7 +193,6 @@ module.exports = function (RED) {
                             _subscribeMap: {},
                             _procedureReqMap: {},
                             _procedureMap: {},
-                            _tout: null,
                             on: function (a, b) {
                                 this._emitter.on(a, b);
                             },
@@ -275,9 +274,6 @@ module.exports = function (RED) {
                             var options = {url: address, realm: realm};
                             obj.wampConnection = new autobahn.Connection(options);
 
-                            obj._tout && clearTimeout(obj._tout);
-                            obj._tout = null;
-
                             obj.wampConnection.onopen = function (session) {
                                 RED.log.info("wamp client [" + options + "]connected.");
                                 obj.wampSession = session;
@@ -319,12 +315,6 @@ module.exports = function (RED) {
                                 if (!obj._closing) {
                                     // RED.log.error("unexpected close", {uri:uri});
                                     obj._emitter.emit("closed");
-
-                                    if (!obj._tout) {
-                                        obj._tout = setTimeout(function () {
-                                            setupWampClient();
-                                        }, 5000); // TODO: put this in settings
-                                    }
                                 }
                                 obj._subscribeMap = {};
                                 RED.log.info("wamp client closed");
