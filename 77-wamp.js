@@ -275,7 +275,7 @@ module.exports = function (RED) {
                             obj.wampConnection = new autobahn.Connection(options);
 
                             obj.wampConnection.onopen = function (session) {
-                                RED.log.info("wamp client [" + options + "]connected.");
+                                RED.log.info("wamp client [" + JSON.stringify(options) + "]connected.");
                                 obj.wampSession = session;
                                 obj._connected = true;
                                 obj._emitter.emit("ready");
