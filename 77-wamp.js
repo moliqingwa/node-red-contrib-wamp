@@ -271,7 +271,7 @@ module.exports = function (RED) {
                             obj._connecting = true;
                             obj._connected = false;
                             obj._emitter.emit("closed");
-                            var options = {url: address, realm: realm};
+                            var options = {url: address, realm: realm, retry_if_unreachable: true, max_retries: -1};
                             obj.wampConnection = new autobahn.Connection(options);
 
                             obj.wampConnection.onopen = function (session) {
